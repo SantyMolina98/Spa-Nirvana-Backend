@@ -1,0 +1,44 @@
+{
+  "name": "spa-nirvana-backend",
+  "version": "1.0.0",
+  "description": "Proyecto de Nirvana Spa and Beauty, base de datos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "start" : "node index.js",
+    "dev": "node --watch --env-file=.env index.js",
+    "type": "git",
+    "url": "git+https://github.com/SantyMolina98/Spa-Nirvana-Backend.git"
+  },
+  "keywords": [
+    "spa",
+    "beauty",
+    "nirvana",
+    "servicios",
+    "categorias",
+    "masajes",
+    "tratamientos",
+    "aromaterapia",
+    "faciales",
+    "corporales"
+  ],
+  "author": "Santiago Molina, Anahí Teller, Nazarena Molina, Génesis Bolaños",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/SantyMolina98/Spa-Nirvana-Backend/issues"
+  },
+  "homepage": "https://github.com/SantyMolina98/Spa-Nirvana-Backend#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cloudinary": "^2.8.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-validator": "^7.3.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.20.0"
+  }
+}
