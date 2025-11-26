@@ -4,11 +4,11 @@
   "description": "Proyecto de Nirvana Spa and Beauty, base de datos",
   "main": "index.js",
   "scripts": {
+    "start" : "node index.js",
+    "dev": "node --watch --env-file=.env index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
-    "start" : "node index.js",
-    "dev": "node --watch --env-file=.env index.js",
     "type": "git",
     "url": "git+https://github.com/SantyMolina98/Spa-Nirvana-Backend.git"
   },
