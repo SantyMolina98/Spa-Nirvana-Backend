@@ -1,45 +1,19 @@
 const {Router} = require('express');
-const { get } = require('mongoose');
+
+const { usuarioGetID, getUsuarios, usuarioPost, usuarioPut ,deleteUsuario } = require('../controllers/controlUsuarios');
 
 const router = Router();
 
 //Obtener todos los usuarios
-router.get('/', (req, res) => {
-    res.json({
-        msg: 'GET usuarios'
-    });
-});
+router.get('/', getUsuarios);
 
-router.get('/:id', (req, res) => {
-    const id = req.params.id;
-    res.json({
-        msg: 'GET usuario ' + id
-    });
-});
-
+router.get('/:id', usuarioGetID);
+   
 //Crear un usuario
-router.post('/', (req, res) => {
-    const body = req.body;
-    res.json({
-        msg: 'POST usuario',
-        body
-    });
-});
+router.post('/', usuarioPost);
 
-router.put('/:id', (req, res) => {
-    const id = req.params.id;
-    const body = req.body;
-    res.json({
-        msg: 'PUT usuario ' + id,
-        body
-    });
-});
+router.put('/:id', usuarioPut); 
 
-router.delete('/:id', (req, res) => {
-    const id = req.params.id;
-    res.json({
-        msg: 'DELETE usuario ' + id
-    });
-});
+router.delete('/:id', deleteUsuario);
 
 module.exports = router;
