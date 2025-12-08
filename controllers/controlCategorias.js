@@ -97,4 +97,3 @@ module.exports = {
     deleteCategoria
 }
 
-//Me quede en la clase 71, debo iniciarla
