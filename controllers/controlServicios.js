@@ -38,23 +38,25 @@ const getServicioID = async(req = request, res = response) => {
 
 const postServicio = async(req = request, res = response) => { 
     const { precio, descripcion, img, duracion, disponible,/* usuario */ } = req.body; 
-    const nombre = req.body.nombre.toUpperCase();
-    const categoriaValid = req.body.categoria.toUpperCase();
+    const nombreObl = req.body.nombre.toUpperCase();
 
     //Verificar  y validar si la categoría existe
-    const categoriaDB = await Categoria.findOne({ categoriaValid });
+    const categoriaValid = req.body.categoria.toUpperCase();
+    const categoriaDB = await Categoria.findOne({ nombre: categoriaValid });
+
     if(!categoriaDB){
       return res.status(400).json({
         msg: `La categoría ${categoriaValid} no existe`
       });
     }
+
     //Verificar si el servicio existe
-    const servicioDB = await Servicio.findOne({ nombre });
+    const servicioDB = await Servicio.findOne({ nombreObl });
      
     //Validar si el producto existe
     if(servicioDB){
       return res.status(400).json({
-        msg: `El servicio ${servicioDB.nombre}, ya existe`
+        msg: `El servicio ${servicioDB.nombreObl}, ya existe`
       });
     }
     
@@ -63,7 +65,7 @@ const postServicio = async(req = request, res = response) => {
     const imagen = result.secure_url;   
 
     //Generar la data a guardar
-    const data = {nombre, categoria: categoriaDB._id, precio, descripcion, img: imagen, duracion, disponible /* , usuario: req.usuario._id */ };
+    const data = {nombre: nombreObl, categoria: categoriaDB._id, precio, descripcion, img: imagen, duracion, disponible /* , usuario: req.usuario._id */ };
 
     const servicio = new Servicio(data);
 
