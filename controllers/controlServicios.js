@@ -12,7 +12,7 @@ const getServicios = async (req = request, res = response) => {
         Servicio.find(query)
             .skip(Number(desde))
             .limit(Number(limite))
-            /* .populate('usuario','correo') */
+            .populate('usuario','correo')
             .populate('categoria', 'nombre')
     ]);
 
@@ -26,7 +26,7 @@ const getServicios = async (req = request, res = response) => {
 const getServicioID = async(req = request, res = response) => {
     const { id } = req.params;
     const servicio = await Servicio.findById(id)
-        /* .populate('usuario','correo') */
+        .populate('usuario','nombre')
         .populate('categoria', 'nombre');
 
         res.json({

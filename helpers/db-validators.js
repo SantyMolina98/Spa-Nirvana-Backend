@@ -1,4 +1,4 @@
-const Usuario = require('../models/usuario');
+const Usuario = require('../models/usuarios');
 const Rol = require('../models/rol');
 const Categoria = require('../models/categoria');
 const Servicio = require('../models/servicio');
@@ -46,6 +46,7 @@ const esServicioValido = async (id) => {
 
 module.exports = {
   esemailValido,
+  esUsuarioValido,
   esRolValido,
   esCategoriaValida,
   esServicioValido

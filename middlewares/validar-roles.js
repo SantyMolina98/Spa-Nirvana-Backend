@@ -21,5 +21,3 @@ const esAdminRole = (req = request, res = response, next) => {
 module.exports = {
   esAdminRole
 }
-
-//me quede en la clase 74, minuto 1:15:00 aprox.
