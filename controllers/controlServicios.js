@@ -37,18 +37,8 @@ const getServicioID = async(req = request, res = response) => {
 
 
 const postServicio = async(req = request, res = response) => { 
-    const { precio, descripcion, img, duracion, disponible,/* usuario */ } = req.body; 
+    const { precio, categoria, descripcion, img, duracion, disponible, usuario } = req.body; 
     const nombreObl = req.body.nombre.toUpperCase();
-
-    //Verificar  y validar si la categoría existe
-    const categoriaValid = req.body.categoria.toUpperCase();
-    const categoriaDB = await Categoria.findOne({ nombre: categoriaValid });
-
-    if(!categoriaDB){
-      return res.status(400).json({
-        msg: `La categoría ${categoriaValid} no existe`
-      });
-    }
 
     //Verificar si el servicio existe
     const servicioDB = await Servicio.findOne({ nombreObl });
@@ -61,11 +51,18 @@ const postServicio = async(req = request, res = response) => {
     }
     
     //Subir imagen a Cloudinary
-    const result = await cloudinary.uploader.upload(img );
-    const imagen = result.secure_url;   
+    const imagen = async (img) =>{
+      try{
+        const result = await cloudinary.uploader.upload(img);
+        return result.secure_url;
+      } catch (error){    
+        console.error('Error al subir la imagen a Cloudinary:', error);
+      }
+     }
+    const imgId = await imagen(req.body.img);
 
     //Generar la data a guardar
-    const data = {nombre: nombreObl, categoria: categoriaDB._id, precio, descripcion, img: imagen, duracion, disponible /* , usuario: req.usuario._id */ };
+    const data = {nombre: nombreObl, categoria, precio, descripcion, imagen: imgId, duracion, disponible, usuario: req.usuario._id };
 
     const servicio = new Servicio(data);
 
@@ -79,9 +76,9 @@ const postServicio = async(req = request, res = response) => {
 
   const putServicio = async (req = request, res = response) => {
     const { id } = req.params;
-    const { precio, categoria, descripcion, img, duracion, disponible, /* usuario */ } = req.body;
+    const { precio, categoria, descripcion, img, duracion, disponible, usuario } = req.body;
     
-    /* const usuario = req.usuario_id; */
+    const usuarioId = req.usuario_id;
 
     if(img){
       const servicioActual = await Servicio.findById(id);
@@ -95,10 +92,17 @@ const postServicio = async(req = request, res = response) => {
     }
 
     //Carga de la imagen nueva
-    const resultPut = await cloudinary.uploader.upload(img);
-    const imagenPut = resultPut.secure_url;
+    const imagen = async (img) =>{
+      try{
+        const result = await cloudinary.uploader.upload(img);
+        return result.secure_url;
+      } catch (error){    
+        console.error('Error al subir la imagen a Cloudinary:', error);
+      }
+     }
+    const imgId = await imagen(req.body.img);
 
-    let data = {precio,categoria, descripcion, img: imagenPut,duracion, disponible}
+    let data = {precio,categoria, descripcion, img: imgId,duracion, disponible}
 
     if(req.body.nombre){
       data.nombre = req.body.nombre.toUpperCase();
@@ -132,5 +136,3 @@ module.exports = {
     deleteServicio
 };
 
-
-//Me quedé en la clase 74, tengo que comenzarla

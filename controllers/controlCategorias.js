@@ -10,7 +10,7 @@ const getCategorias = async(req = request, res = response) => {
         Categoria.find(query)
             .skip(desde)
             .limit(limite)
-            /* .populate('usuario', 'correo') */
+            .populate('usuario', 'correo')
     ]);
 
     res.json({
@@ -24,7 +24,7 @@ const getCategorias = async(req = request, res = response) => {
 const getCategoriasID = async(req = request, res = response) => {
     const { id } = req.params;
   
-    const categoria = await Categoria.findById(id)/* .populate('usuario','nombre','apellido', 'correo') */;
+    const categoria = await Categoria.findById(id).populate('usuario','nombre','apellido', 'correo');
 
     res.json({
         msg: 'Categoria obtenida por ID único',
@@ -49,7 +49,7 @@ const postCategoria = async(req = request, res = response) => {
     //Generar la data a guardar
     const data = {
       nombre,
-      /* usuario: req.usuario._id */
+      usuario: req.usuario._id
     }
 
     const categoria = new Categoria(data);
@@ -67,9 +67,9 @@ const postCategoria = async(req = request, res = response) => {
 const putCategoria = async(req = request, res = response) => {
     const { id } = req.params;
     const nombre = req.body.nombre.toUpperCase();
-    /* const usuario = req.usuario._id; */
+    const usuario = req.usuario._id;
 
-    const data = {nombre/* , usuario */};
+    const data = {nombre, usuario};
 
     const categoria = await Categoria.findByIdAndUpdate(id, data, { new: true });
     res.json({

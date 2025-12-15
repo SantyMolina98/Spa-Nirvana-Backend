@@ -1,12 +1,11 @@
 const {Router} = require('express');
-
+const { check } = require('express-validator');
 const { usuarioGetID, getUsuarios, usuarioPost, usuarioPut ,deleteUsuario } = require('../controllers/controlUsuarios');
 const { validarJWT } = require('../middlewares/validar-jwt');
 const { esAdminRole } = require('../middlewares/validar-roles');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { esUsuarioValido, esemailValido, esRolValido } = require('../helpers/db-validators');
 
-const { check } = require('express-validator');
 const router = Router();
 
 //Obtener todos los usuarios
