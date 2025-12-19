@@ -24,6 +24,11 @@ router.get('/:id',[
 router.post('/', [
   check('nombre', 'El nombre es obligatorio').notEmpty(),
   check('apellido', 'El apellido es obligatorio').notEmpty(),
+  check('username', 'El nombre de usuario es obligatorio').notEmpty(),
+  check('telefono', 'El teléfono es obligatorio').notEmpty(),
+  check('domicilio', 'El domicilio es obligatorio').notEmpty(),
+  check('ciudad', 'La ciudad es obligatoria').notEmpty(),
+  check('codpostal', 'El código postal es obligatorio').isLength(4),
   check('correo', 'El correo no es válido').custom(esemailValido),
   check('password', 'La contraseña debe tener al menos 6 caracteres').isLength({min: 6}),
   check('rol').custom(esRolValido),
