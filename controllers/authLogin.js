@@ -4,10 +4,10 @@ const Usuario = require('../models/usuarios');
 const { generarJWT } = require('../helpers/generar-jwt');
 
 const login = async (req = request, res = response) => {
-  const { correo, password } = req.body; 
+  const { username, password } = req.body; 
   try{
     //Verificar si el email existe
-    const usuario = await Usuario.findOne({correo});
+    const usuario = await Usuario.findOne({username});
 
     if(!usuario){
       return res.status(400).json({

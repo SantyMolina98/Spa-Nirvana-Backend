@@ -1,6 +1,5 @@
 const {response, request} = require('express');
 const Servicio = require('../models/servicio');
-const Categoria = require('../models/categoria');
 const cloudinary = require('cloudinary').v2;
 
 const getServicios = async (req = request, res = response) => {
