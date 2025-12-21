@@ -9,4 +9,4 @@ const RolSchema = Schema({
     // fechaRegistro:{type: Date, default: Date.now}
 })
 
-module.exports = model('Rol', RolSchema, 'rol');
+module.exports = model('Rol', RolSchema, 'rols');
