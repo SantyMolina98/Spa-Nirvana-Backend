@@ -31,14 +31,32 @@ const getProfesionalById = async(req = request, res = response) => {
 
 //Cargar un nuevo profesional
 const postProfesional = async(req = request, res = response) => {
+    const {rol}= req.usuario;
+
+    if(rol !== 'Admin'){
+      return  res.status(403).json({
+            msg: 'No tienes permisos para crear un profesional'
+        });
+    }
+
     const datos = req.body;
     const {nombre, apellido, especialidad, telefono, correo, domicilio, password} = datos;
     const profesional = new Profesional({nombre, apellido, especialidad, telefono, correo, domicilio, password});
-    await profesional.save();
-    res.json({
-        mensaje: `Profesional ${nombre} creado correctamente`,
-        profesional
-    });
+    try{
+        //Encriptar la contraseña
+        const salt = bcryptjs.genSaltSync(10);
+        profesional.password = bcryptjs.hashSync(password, salt);
+        await profesional.save();
+        res.json({
+            mensaje: `Profesional ${nombre} creado correctamente`,
+            profesional
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            msg: 'Error al crear el profesional'
+        });
+    }
 }
 
 //Actualizar datos de un profesional
