@@ -1,6 +1,6 @@
 const {response, request} = require('express');
 const bcryptjs = require('bcryptjs');
-
+const jwt = require('jsonwebtoken');
 const Usuario = require('../models/usuarios');
 
 //Obtener usuarios
@@ -108,11 +108,63 @@ const deleteUsuario = async(req = request, res = response) => {
     });
 }
 
+const olvidePassword = async (req = request, res = response) => {
+    const { correo } = req.body;
+
+    try {
+        const usuario = await Usuario.findOne({ correo });
+        if (!usuario) {
+            return res.status(400).json({ mensaje: 'El usuario no existe' });
+        }
+        const payload = { uid: usuario.id };
+        const token = jwt.sign(payload, process.env.SECRET_KEY || 'mi_palabra_secreta', { expiresIn: '1h' });
+        const link = `http://localhost:5173/recuperar/${token}`;
+        console.log(link); 
+        res.json({
+            mensaje: 'Se ha enviado un enlace a tu correo',
+            link: link
+        });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ mensaje: 'Error interno' });
+    }
+};
+
+//GUARDAR NUEVA CONTRASEÑA (usuario envía token)
+const nuevoPassword = async (req, res) => {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    try {
+        const { uid } = jwt.verify(token, process.env.SECRET_KEY || 'mi_palabra_secreta');
+
+        const usuario = await Usuario.findById(uid);
+        if (!usuario) {
+            return res.status(400).json({ mensaje: 'Usuario no válido' });
+        }
+
+        const salt = bcryptjs.genSaltSync(10);
+        usuario.password = bcryptjs.hashSync(password, salt);
+
+        await usuario.save();
+
+        res.json({ mensaje: 'Contraseña restablecida correctamente' });
+
+    } catch (error) {
+        console.log(error);
+        res.status(400).json({ mensaje: 'El enlace es inválido o ha expirado' });
+    }
+};
+
 module.exports = {
     getUsuarios,
     usuarioGetID,
     usuarioPost,
     usuarioPut,
-    deleteUsuario
+    deleteUsuario,
+    olvidePassword,
+    nuevoPassword
 }
+
 
