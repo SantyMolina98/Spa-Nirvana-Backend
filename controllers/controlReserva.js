@@ -1,6 +1,5 @@
 const {request, response} = require('express');
 const { Reserva } = require('../models/reserva');
-const bcryptjs = require('bcryptjs');
 
 // GET para administrador: obtener todas las reservas
 const getReservasAdmin = async (req = request, res = response) => {

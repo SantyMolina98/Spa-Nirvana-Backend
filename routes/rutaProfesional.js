@@ -4,7 +4,7 @@ const { getProfesionales ,getProfesionalById, postProfesional, putProfesional, d
 const { validarJWT } = require('../middlewares/validar-jwt');
 const { esProfesionalRole, esAdminRole } = require('../middlewares/validar-roles');
 const { validarCampos } = require('../middlewares/validar-campos');
-const { esProfesionalValido, esemailValido, esRolValido } = require('../helpers/db-validators');
+const { esProfesionalValido, esemailValido } = require('../helpers/db-validators');
 
 const router = Router();
 

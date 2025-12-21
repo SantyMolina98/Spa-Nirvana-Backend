@@ -33,10 +33,11 @@ const usuarioGetID = async(req = request, res = response) => {
 
 const usuarioPost = async (req = request, res = response) => {
     const datos = req.body;
-    const { nombre, apellido, correo, password, rol, telefono, domicilio, ciudad, codpostal } = datos;
+    const { nombre, apellido, username, correo, password, rol, telefono, domicilio, ciudad, codpostal } = datos;
     const usuario = new Usuario({
         nombre,
         apellido,
+        username,
         correo,
         password,
         rol,
