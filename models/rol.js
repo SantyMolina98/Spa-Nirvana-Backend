@@ -6,7 +6,7 @@ const RolSchema = Schema({
     },
     descripcion:{type: String},
     estado:{type: Boolean, default: true},
-    fechaRegistro:{type: Date, default: Date.now}
+    // fechaRegistro:{type: Date, default: Date.now}
 })
 
-module.exports = model('Rol', RolSchema);
+module.exports = model('Rol', RolSchema, 'rols');

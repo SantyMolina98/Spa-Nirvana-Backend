@@ -1,6 +1,7 @@
 const {Router} = require('express');
 const { check } = require('express-validator');
-const { usuarioGetID, getUsuarios, usuarioPost, usuarioPut ,deleteUsuario } = require('../controllers/controlUsuarios');
+const { usuarioGetID, getUsuarios, usuarioPost, usuarioPut ,deleteUsuario, olvidePassword, 
+    nuevoPassword  } = require('../controllers/controlUsuarios');
 const { validarJWT } = require('../middlewares/validar-jwt');
 const { esAdminRole } = require('../middlewares/validar-roles');
 const { validarCampos } = require('../middlewares/validar-campos');
@@ -49,5 +50,15 @@ router.delete('/:id', [
   check('id').custom(esUsuarioValido),
   validarCampos
 ],deleteUsuario);
+
+router.post('/olvide-password', [
+    check('correo', 'El correo no es válido').isEmail(),
+    validarCampos
+], olvidePassword);
+
+router.post('/nuevo-password/:token', [
+    check('password', 'La contraseña debe tener al menos 6 caracteres').isLength({min: 6}),
+    validarCampos
+], nuevoPassword);
 
 module.exports = router;
