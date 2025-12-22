@@ -25,7 +25,6 @@ router.get('/:id',[
 router.post('/', [
   check('nombre', 'El nombre es obligatorio').notEmpty(),
   check('apellido', 'El apellido es obligatorio').notEmpty(),
-  check('username', 'El nombre de usuario es obligatorio').notEmpty(),
   check('telefono', 'El teléfono es obligatorio').notEmpty(),
   check('domicilio', 'El domicilio es obligatorio').notEmpty(),
   check('ciudad', 'La ciudad es obligatoria').notEmpty(),
