@@ -1,7 +1,7 @@
 const {Router} = require('express');
 const { check } = require('express-validator');
 const { usuarioGetID, getUsuarios, usuarioPost, usuarioPut ,deleteUsuario, olvidePassword, 
-    nuevoPassword  } = require('../controllers/controlUsuarios');
+    nuevoPassword, getProfesionales, getProfesionalById  } = require('../controllers/controlUsuarios');
 const { validarJWT } = require('../middlewares/validar-jwt');
 const { esAdminRole } = require('../middlewares/validar-roles');
 const { validarCampos } = require('../middlewares/validar-campos');
@@ -60,5 +60,21 @@ router.post('/nuevo-password/:token', [
     check('password', 'La contraseña debe tener al menos 6 caracteres').isLength({min: 6}),
     validarCampos
 ], nuevoPassword);
+
+// Rutas para profesionales
+//Obtener todos los profesionales
+router.get('/profesionales', [
+  validarJWT,
+  esAdminRole
+], getProfesionales);
+
+//Obtener profesional por ID
+router.get('/profesionales/:id',[
+  validarJWT,
+  esAdminRole,
+  check('id', 'No es un ID válido').isMongoId(),
+  check('id').custom(esUsuarioValido),
+  validarCampos,
+], getProfesionalById);
 
 module.exports = router;

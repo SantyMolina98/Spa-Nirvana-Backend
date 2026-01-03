@@ -7,6 +7,7 @@ const UsuarioSchema = Schema({
     correo: {type: String, required: [true, 'El correo es obligatorio'], unique: true},
     password: {type: String, required: [true, 'La contraseña es obligatoria']},
     rol: {type: String, required: true},
+    especialidad: {type: String}, // Campo opcional para profesionales
     img: {type: String},
     telefono: { type: String },
     domicilio: { type: String },

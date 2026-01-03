@@ -1,6 +1,5 @@
 const Usuario = require('../models/usuarios');
 const Rol = require('../models/rol');
-const Profesional = require('../models/profesional');
 const Categoria = require('../models/categoria');
 const Servicio = require('../models/servicio');
 
@@ -18,15 +17,6 @@ const esRolValido = async (rol) => {
   const existeRol = await Rol.findOne({ rol });
   if (!existeRol) {
     throw new Error(`El rol: ${rol}, no está registrado en la BD`);
-  }
-}
-
-//Validar profesional
-const esProfesionalValido = async(id) => {
-  const existeProfesional = await Profesional.findById(id);
-  if(!existeProfesional){
-    throw new Error(`El profesional con id: ${id}, no existe en la BD`);
-    
   }
 }
 
@@ -58,7 +48,6 @@ module.exports = {
   esemailValido,
   esUsuarioValido,
   esRolValido,
-  esProfesionalValido,
   esCategoriaValida,
   esServicioValido
 }
