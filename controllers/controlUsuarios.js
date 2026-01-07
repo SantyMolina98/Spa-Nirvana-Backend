@@ -5,7 +5,7 @@ const Usuario = require('../models/usuarios');
 
 //Obtener usuarios
 const getUsuarios = async(req = request, res = response) => {
-    const {desde = 0, limite = 5} = req.query;
+    const {desde = 0, limite = 100} = req.query;
     const query = {estado: true};
 
     const [total, usuarios] = await Promise.all([

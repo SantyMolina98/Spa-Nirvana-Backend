@@ -12,7 +12,7 @@ const UsuarioSchema = Schema({
     telefono: { type: String },
     domicilio: { type: String },
     ciudad: { type: String },   
-    codpostal: { type: String }, 
+    codpostal: { type: Number }, 
     fechaRegistro: {type: Date, default: Date.now},
     estado: {type: Boolean, default: true}
 });
