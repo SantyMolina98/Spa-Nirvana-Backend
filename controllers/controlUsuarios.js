@@ -150,7 +150,7 @@ const olvidePassword = async (req = request, res = response) => {
         }
         const payload = { uid: usuario.id };
         const token = jwt.sign(payload, process.env.SECRET_KEY || 'mi_palabra_secreta', { expiresIn: '1h' });
-        const link = `http://localhost:5173/recuperar/${token}`;
+        const link = `http://localhost:5173/RecuperarCuenta/${token}`;
         console.log(link); 
         res.json({
             mensaje: 'Se ha enviado un enlace a tu correo',
