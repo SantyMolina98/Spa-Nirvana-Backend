@@ -38,6 +38,7 @@ class Server{
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 }));
+   app.options("*", cors());
 
     //Lectura y parseo del body
     this.app.use(express.json());
