@@ -3,14 +3,16 @@ const {Schema, model} = require('mongoose');
 const UsuarioSchema = Schema({  
     nombre: {type: String, required: [true, 'El nombre es obligatorio']}, 
     apellido: {type: String, required: [true, 'El apellido es obligatorio']},
+    username: {type: String, required: [true, 'El nombre de usuario es obligatorio'], unique: true},
     correo: {type: String, required: [true, 'El correo es obligatorio'], unique: true},
     password: {type: String, required: [true, 'La contraseña es obligatoria']},
     rol: {type: String, required: true},
+    especialidad: {type: String}, // Campo opcional para profesionales
     img: {type: String},
     telefono: { type: String },
     domicilio: { type: String },
     ciudad: { type: String },   
-    codpostal: { type: String }, 
+    codpostal: { type: Number }, 
     fechaRegistro: {type: Date, default: Date.now},
     estado: {type: Boolean, default: true}
 });

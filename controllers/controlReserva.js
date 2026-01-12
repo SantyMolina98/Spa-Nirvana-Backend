@@ -1,6 +1,5 @@
 const {request, response} = require('express');
 const { Reserva } = require('../models/reserva');
-const bcryptjs = require('bcryptjs');
 
 // GET para administrador: obtener todas las reservas
 const getReservasAdmin = async (req = request, res = response) => {
@@ -47,7 +46,98 @@ const getReservasUsuario = async (req = request, res = response) => {
   }
 };
 
+//Realiar una reserva como usuario
+const postReserva = async (req = request, res = response) => {  
+  const { uid } = req;
+  const { servicio, fechaReserva, horaReserva, rol } = req.body;
+
+  //Cargar una reserva como administrador
+  if(rol === 'Admin'){
+    try {
+    const reserva = new Reserva({
+      usuario: uid,
+      servicio,
+      fechaReserva,
+      horaReserva
+    });
+
+    await reserva.save();
+
+     res.json({
+     ok: true,
+     msg: 'Reserva realizada exitósamente',
+     reserva
+   });
+    } catch (error) {
+      res.status(500).json({
+        ok: false,
+        msg: 'Error al realizar la reserva'
+      });
+    }
+  } else{
+    if(rol === 'Usuario'){
+      try {
+        const reserva = new Reserva({
+          usuario: uid,
+          servicio,
+          fechaReserva,
+          horaReserva
+        });
+
+        await reserva.save();
+      } catch (error) {
+        res.status(500).json({
+          ok: false,
+          msg: 'Error al realizar la reserva'
+        });
+      }
+    } else{
+      return res.status(400).json({
+        ok: false,
+        msg: 'Rol no válido para realizar una reserva'
+      });
+    }
+  } 
+};
+
+//Borrar una reserva como usuario
+const deleteReserva = async (req = request, res = response) => {
+  try {
+    const { id } = req.params;
+    const { uid } = req;
+    const reserva = await Reserva.findById(id);
+
+    if (!reserva) {
+      return res.status(404).json({
+        ok: false,
+        msg: 'Reserva no encontrada'
+      });
+    }
+
+    if (reserva.usuario.toString() !== uid) {
+      return res.status(403).json({
+        ok: false,
+        msg: 'No tienes permiso para eliminar esta reserva'
+      });
+    }
+
+    await Reserva.findByIdAndDelete(id);
+
+    res.json({
+      ok: true,
+      msg: 'Reserva eliminada exitósamente'
+    });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      msg: 'Error al eliminar la reserva'
+    });
+  }
+};
+
 module.exports ={
   getReservasAdmin,
-  getReservasUsuario
+  getReservasUsuario,
+  postReserva,
+  deleteReserva
 }
