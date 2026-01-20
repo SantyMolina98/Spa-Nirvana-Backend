@@ -101,7 +101,7 @@ const postServicio = async(req = request, res = response) => {
      }
     const imgId = await imagen(req.body.img);
 
-    let data = {precio,categoria, descripcion, img: imgId,duracion, disponible}
+    let data = {precio,categoria, descripcion, img: imgId, duracion, disponible, usuario: usuarioId };
 
     if(req.body.nombre){
       data.nombre = req.body.nombre.toUpperCase();

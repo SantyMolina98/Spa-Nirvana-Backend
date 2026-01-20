@@ -29,16 +29,17 @@ class Server{
   middlewares(){
     //CORS
     this.app.use(cors({
-  origin: "*",
-  credentials: true,
-  allowedHeaders: [
-    "Content-Type",
-    "Authorization",
-    "x-token"
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+      origin: "*",
+      credentials: true,
+      allowedHeaders: [
+        "Content-Type",
+        "Authorization",
+        "x-token"
+      ],
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 }));
-   app.options("*", cors());
+   /* this.app.use("*", cors()); */
+   
 
     //Lectura y parseo del body
     this.app.use(express.json());
