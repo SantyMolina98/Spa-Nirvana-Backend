@@ -42,6 +42,15 @@ class Server{
     }));
    /* this.app.use("*", cors()); */
    
+    origin: "*",
+    credentials: true,
+    allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "x-token"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+   }));
 
     //Lectura y parseo del body
     this.app.use(express.json());
