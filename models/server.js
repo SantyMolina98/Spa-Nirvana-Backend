@@ -29,26 +29,18 @@ class Server{
   middlewares(){
     //CORS
     this.app.use(cors({
-      origin: "*",
-      credentials: true,
-      allowedHeaders: [
-        "Content-Type",
-        "Authorization",
-        "x-token"
-      ],
-      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-}));
-   /* this.app.use("*", cors()); */
-   
-    origin: "*",
-    credentials: true,
-    allowedHeaders: [
-    "Content-Type",
-    "Authorization",
-    "x-token"
-    ],
+     origin: process.env.NODE_ENV === "production" 
+     ? "https://spa-nirvana.netlify.app"
+     : "http://localhost:5174",
+     credentials: true,
+     allowedHeaders: [
+      "Content-Type",
+      "Authorization",
+      "x-token"
+     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-   }));
+    }));
+   /* this.app.use("*", cors()); */
 
     //Lectura y parseo del body
     this.app.use(express.json());
