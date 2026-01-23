@@ -26,29 +26,40 @@ class Server{
     await dbConection();
   }
 
-  middlewares(){
-    //CORS
-    this.app.use(cors({
-     origin: process.env.NODE_ENV === "production" 
-     ? "https://spa-nirvana.netlify.app"
-     : "http://localhost:5174",
-     credentials: true,
-     allowedHeaders: [
+ middlewares(){
+  //CORS
+  const allowedOrigins = [
+    'https://spa-nirvana.netlify.app',
+    'http://localhost:5174',
+    'http://localhost:3000'
+  ];
+
+  this.app.use(cors({
+    origin: function (origin, callback) {
+      // Permitir requests sin origin (como mobile apps o curl)
+      if (!origin) return callback(null, true);
+      
+      if (allowedOrigins.indexOf(origin) === -1) {
+        const msg = 'El origen CORS no está permitido.';
+        return callback(new Error(msg), false);
+      }
+      return callback(null, true);
+    },
+    credentials: true,
+    allowedHeaders: [
       "Content-Type",
       "Authorization",
       "x-token"
-     ],
+    ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
-    }));
-   /* this.app.use("*", cors()); */
+  }));
 
-    //Lectura y parseo del body
-    this.app.use(express.json());
+  //Lectura y parseo del body
+  this.app.use(express.json());
 
-    //Definir carpeta pública
-    this.app.use(express.static('public'));
-  }
-
+  //Definir carpeta pública
+  this.app.use(express.static('public'));
+}
   routes(){
     this.app.use(this.authPath, require('../routes/rutaAuth'));
     this.app.use(this.usuarioPath, require('../routes/rutaUsuarios'));

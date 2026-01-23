@@ -12,7 +12,7 @@ cloudinary.config( {
 
 const server = new Server();
 
-/* server.listen(); */
+server.listen();
 
 module.exports=server.app;
 
