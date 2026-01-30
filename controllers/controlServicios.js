@@ -75,35 +75,36 @@ const postServicio = async(req = request, res = response) => {
 
   const putServicio = async (req = request, res = response) => {
     const { id } = req.params;
-    const { precio, categoria, descripcion, img, duracion, disponible, usuario } = req.body;
+    const { precio, categoria, descripcion, img, duracion, disponible } = req.body;
     
-    const usuarioId = req.usuario_id;
+    const usuarioId = req.usuario._id;
 
-    if(img){
+    let imgId;
+    if (img) {
       const servicioActual = await Servicio.findById(id);
-      const imagenBorrar = servicioActual.img;
-      const nombreArr = imagenBorrar.split('/');
-      const nombre = nombreArr[nombreArr.length - 1];
-      const [public_id] = nombre.split('.');
+      const imagenBorrar = servicioActual?.imagen;
+      if (imagenBorrar) {
+        const nombreArr = imagenBorrar.split('/');
+        const nombre = nombreArr[nombreArr.length - 1];
+        const [public_id] = nombre.split('.');
+        await cloudinary.uploader.destroy(public_id);
+      }
 
-      //Borrar imagen de Cloudinary
-      await cloudinary.uploader.destroy(public_id);
+      const imagen = async (img) => {
+        try {
+          const result = await cloudinary.uploader.upload(img);
+          return result.secure_url;
+        } catch (error) {
+          console.error('Error al subir la imagen a Cloudinary:', error);
+        }
+      };
+      imgId = await imagen(img);
     }
 
-    //Carga de la imagen nueva
-    const imagen = async (img) =>{
-      try{
-        const result = await cloudinary.uploader.upload(img);
-        return result.secure_url;
-      } catch (error){    
-        console.error('Error al subir la imagen a Cloudinary:', error);
-      }
-     }
-    const imgId = await imagen(req.body.img);
+    let data = { precio, categoria, descripcion, duracion, disponible, usuario: usuarioId,img: imgId };
+    
 
-    let data = {precio,categoria, descripcion, img: imgId, duracion, disponible, usuario: usuarioId };
-
-    if(req.body.nombre){
+    if (req.body.nombre) {
       data.nombre = req.body.nombre.toUpperCase();
     }
 

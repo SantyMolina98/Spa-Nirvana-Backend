@@ -22,6 +22,8 @@ router.post('/',[
   check('categoria', 'La categoría es obligatoria').notEmpty(),
   check('precio', 'El precio es obligatorio').notEmpty(),
   check('disponible', 'La disponibilidad es obligatoria').notEmpty(),
+  check('descripcion', 'La descripción es obligatoria').notEmpty(),
+  check('img', 'La imagen es obligatoria').notEmpty(),
   check('duracion', 'La duracion es obligatoria').notEmpty(),
   validarCampos
 ], postServicio);
