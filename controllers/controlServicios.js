@@ -35,43 +35,40 @@ const getServicioID = async(req = request, res = response) => {
 }     
 
 
-const postServicio = async(req = request, res = response) => { 
-    const { precio, categoria, descripcion, img, duracion, disponible, usuario } = req.body; 
-    const nombreObl = req.body.nombre.toUpperCase();
+const postServicio = async (req = request, res = response) => {
+  const { precio, categoria, descripcion, img, duracion, disponible, usuario } = req.body;
+  const nombreObl = req.body.nombre.toUpperCase();
 
-    //Verificar si el servicio existe
-    const servicioDB = await Servicio.findOne({ nombreObl });
-     
-    //Validar si el producto existe
-    if(servicioDB){
-      return res.status(400).json({
-        msg: `El servicio ${servicioDB.nombreObl}, ya existe`
-      });
-    }
-    
-    //Subir imagen a Cloudinary
-    const imagen = async (img) =>{
-      try{
-        const result = await cloudinary.uploader.upload(img);
-        return result.secure_url;
-      } catch (error){    
-        console.error('Error al subir la imagen a Cloudinary:', error);
-      }
-     }
-    const imgId = await imagen(req.body.img);
-
-    //Generar la data a guardar
-    const data = {nombre: nombreObl, categoria, precio, descripcion, imagen: imgId, duracion, disponible, usuario: req.usuario._id };
-
-    const servicio = new Servicio(data);
-
-    //Grabar en la DB
-    await servicio.save();
-    res.status(201).json({
-      msg: `Servicio ${servicio.nombre}, creado exitosamente`,
-      servicio
-    })
+  const servicioDB = await Servicio.findOne({ nombre: nombreObl });
+  if (servicioDB) {
+    return res.status(400).json({ msg: `El servicio ${servicioDB.nombre}, ya existe` });
   }
+
+  let imgId = img;
+  if (img && !img.startsWith('http')) {
+    try {
+      const result = await cloudinary.uploader.upload(img);
+      imgId = result.secure_url;
+    } catch (error) {
+      return res.status(500).json({ msg: 'Error al subir la imagen' });
+    }
+  }
+
+  const data = {
+    nombre: nombreObl,
+    categoria,
+    precio,
+    descripcion,
+    img: imgId,
+    duracion,
+    disponible,
+    usuario: req.usuario._id
+  };
+
+  const servicio = new Servicio(data);
+  await servicio.save();
+  res.status(201).json({ msg: `Servicio ${servicio.nombre}, creado exitosamente`, servicio });
+};
 
   const putServicio = async (req = request, res = response) => {
     const { id } = req.params;
