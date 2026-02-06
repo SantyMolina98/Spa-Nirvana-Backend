@@ -61,9 +61,56 @@ const getProfesionalById = async(req = request, res = response) => {
     });
 }
 
+const validarAgenda = (agenda) => {
+    if (!Array.isArray(agenda) || agenda.length === 0) {
+        return false;
+    }
+    const timeRegex = /^([01]\d|2[0-3]):[0-5]\d$/;
+    const slots = new Set();
+    for (const item of agenda) {
+        if (!item || !Array.isArray(item.horarios) || item.horarios.length === 0) {
+            return false;
+        }
+        for (const horario of item.horarios) {
+            if (!timeRegex.test(horario)) {
+                return false;
+            }
+            const slotKey = `${item.dia}|${horario}`;
+            if (slots.has(slotKey)) {
+                return false;
+            }
+            slots.add(slotKey);
+        }
+    }
+    return true;
+};
+
 const usuarioPost = async (req = request, res = response) => {
     const datos = req.body;
-    const { nombre, apellido, username, correo, password, rol, telefono, domicilio, ciudad, codpostal, especialidad } = datos;
+    const {
+        nombre,
+        apellido,
+        username,
+        correo,
+        password,
+        rol,
+        telefono,
+        domicilio,
+        ciudad,
+        codpostal,
+        especialidadCategoria,
+        especialidadServicio,
+        agenda
+    } = datos;
+
+    if (rol === 'Profesional') {
+        if (!Array.isArray(especialidadCategoria) || especialidadCategoria.length === 0 || !Array.isArray(especialidadServicio) || especialidadServicio.length === 0 || !validarAgenda(agenda)) {
+            return res.status(400).json({
+                mensaje: 'Para profesionales, especialidadCategoria, especialidadServicio y agenda son obligatorios'
+            });
+        }
+    }
+
     const usuario = new Usuario({
         nombre,
         apellido,
@@ -75,7 +122,9 @@ const usuarioPost = async (req = request, res = response) => {
         domicilio,
         ciudad,
         codpostal,
-        especialidad: rol === 'Profesional' ? especialidad : undefined
+        especialidadCategoria: rol === 'Profesional' ? especialidadCategoria : undefined,
+        especialidadServicio: rol === 'Profesional' ? especialidadServicio : undefined,
+        agenda: rol === 'Profesional' ? agenda : undefined
     });
     const salt = bcryptjs.genSaltSync(10);
     const hash = bcryptjs.hashSync(password, salt);
@@ -99,7 +148,27 @@ const usuarioPut = async(req = request, res = response) => {
     const {id} = req.params;
 
     //Obtener los datos a actualizar
-    const {password, correo, especialidad, ...resto} = req.body;
+    const {password, correo, especialidadCategoria, especialidadServicio, agenda, rol, ...resto} = req.body;
+
+    const usuarioExistente = await Usuario.findById(id);
+    if (!usuarioExistente) {
+        return res.status(404).json({
+            mensaje: 'Usuario no encontrado'
+        });
+    }
+
+    const rolFinal = rol || usuarioExistente.rol;
+    const especialidadCategoriaFinal = especialidadCategoria ?? usuarioExistente.especialidadCategoria;
+    const especialidadServicioFinal = especialidadServicio ?? usuarioExistente.especialidadServicio;
+    const agendaFinal = agenda ?? usuarioExistente.agenda;
+
+    if (rolFinal === 'Profesional') {
+        if (!Array.isArray(especialidadCategoriaFinal) || especialidadCategoriaFinal.length === 0 || !Array.isArray(especialidadServicioFinal) || especialidadServicioFinal.length === 0 || !validarAgenda(agendaFinal)) {
+            return res.status(400).json({
+                mensaje: 'Para profesionales, especialidadCategoria, especialidadServicio y agenda son obligatorios'
+            });
+        }
+    }
 
     //Si actualiza la contraseña, encriptar
     if(password){
@@ -109,10 +178,13 @@ const usuarioPut = async(req = request, res = response) => {
 
     //Modificación de datos
     resto.correo = correo;
-    resto.especialidad = especialidad;
+    resto.especialidadCategoria = rolFinal === 'Profesional' ? especialidadCategoriaFinal : undefined;
+    resto.especialidadServicio = rolFinal === 'Profesional' ? especialidadServicioFinal : undefined;
+    resto.agenda = rolFinal === 'Profesional' ? agendaFinal : undefined;
+    resto.rol = rolFinal;
 
     //Buscar el usuario por ID y actualizar
-    const usuarioActualizado = await Usuario.findByIdAndUpdate(id, resto, {new: true});
+    const usuarioActualizado = await Usuario.findByIdAndUpdate(id, resto, {new: true, runValidators: true});
 
     res.json({
         mensaje: 'Usuario actualizado correctamente',
