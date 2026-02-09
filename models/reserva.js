@@ -2,6 +2,7 @@ const { Schema, model } = require('mongoose');
 
 const ReservaSchema = Schema({
   usuario:{type:Schema.Types.ObjectId, ref:'Usuario' ,required:['El usuario es obligatorio para una reserva', true]},
+  profesional:{type:Schema.Types.ObjectId, ref:'Usuario' ,required:['El profesional es obligatorio para una reserva', true]},
   servicio: {type:Schema.Types.ObjectId, ref:'Servicio', required:['El servicio es obligatorio seleccionarlo', true]},
   fechaReserva:{type:Date, required:['Es obligatorio seleccionar una fecha para una reserva', true]},
   rol:{type:String, enum:['Usuario', 'Admin'], default:'Usuario'},

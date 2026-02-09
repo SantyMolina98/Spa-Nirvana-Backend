@@ -1,7 +1,7 @@
 const {Router} = require('express');
 const { check } = require('express-validator');
 const { usuarioGetID, getUsuarios, usuarioPost, usuarioPut ,deleteUsuario, olvidePassword, 
-    nuevoPassword, getProfesionales, getProfesionalById  } = require('../controllers/controlUsuarios');
+  nuevoPassword, getProfesionales, getProfesionalById, getProfesionalesPublic  } = require('../controllers/controlUsuarios');
 const { validarJWT } = require('../middlewares/validar-jwt');
 const { esAdminRole } = require('../middlewares/validar-roles');
 const { validarCampos } = require('../middlewares/validar-campos');
@@ -15,12 +15,6 @@ router.get('/', [
   esAdminRole
 ],getUsuarios);
 
-router.get('/:id',[
-  check('id', 'No es un ID válido').isMongoId(),
-  check('id').custom(esUsuarioValido),
-  validarCampos,
-], usuarioGetID);
-   
 //Crear un usuario
 router.post('/', [
   check('nombre', 'El nombre es obligatorio').notEmpty(),
@@ -139,5 +133,16 @@ router.get('/profesionales/:id',[
   check('id').custom(esUsuarioValido),
   validarCampos,
 ], getProfesionalById);
+
+//Obtener profesionales (publico, datos limitados)
+router.get('/profesionales-public', [
+  validarJWT
+], getProfesionalesPublic);
+
+router.get('/:id',[
+  check('id', 'No es un ID válido').isMongoId(),
+  check('id').custom(esUsuarioValido),
+  validarCampos,
+], usuarioGetID);
 
 module.exports = router;
