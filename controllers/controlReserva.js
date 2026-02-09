@@ -1,5 +1,6 @@
 const {request, response} = require('express');
 const Reserva = require('../models/reserva');
+const Servicio = require('../models/servicio');
 
 // GET para administrador: obtener todas las reservas
 const getReservasAdmin = async (req = request, res = response) => {
@@ -82,10 +83,44 @@ const postReserva = async (req = request, res = response) => {
   }
 
   try {
+    const servicioDB = await Servicio.findById(servicio);
+    if (!servicioDB || !servicioDB.disponible) {
+      return res.status(404).json({
+        ok: false,
+        msg: 'Servicio no encontrado o no disponible'
+      });
+    }
+
+    const fecha = new Date(fechaReserva);
+    if (Number.isNaN(fecha.getTime())) {
+      return res.status(400).json({
+        ok: false,
+        msg: 'La fecha de reserva no es valida'
+      });
+    }
+    fecha.setHours(0, 0, 0, 0);
+
+    const profesionalId = servicioDB.usuario;
+    const reservaExistente = await Reserva.findOne({
+      profesional: profesionalId,
+      servicio,
+      fechaReserva: fecha,
+      horaReserva,
+      estado: { $in: ['pendiente', 'confirmada'] }
+    });
+
+    if (reservaExistente) {
+      return res.status(409).json({
+        ok: false,
+        msg: 'Ese horario ya esta reservado para ese profesional'
+      });
+    }
+
     const reserva = new Reserva({
       usuario: uid,
+      profesional: profesionalId,
       servicio,
-      fechaReserva,
+      fechaReserva: fecha,
       horaReserva,
       rol,
       estado: 'confirmada'

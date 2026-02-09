@@ -61,6 +61,26 @@ const getProfesionalById = async(req = request, res = response) => {
     });
 }
 
+//Obtener profesionales (publico, datos limitados)
+const getProfesionalesPublic = async (req = request, res = response) => {
+    const { desde = 0, limite = 15 } = req.query;
+    const query = { estado: true, rol: 'Profesional' };
+
+    const [total, profesionales] = await Promise.all([
+        Usuario.countDocuments(query),
+        Usuario.find(query)
+            .select('nombre apellido agenda especialidadCategoria especialidadServicio')
+            .skip(desde)
+            .limit(limite)
+    ]);
+
+    res.json({
+        mensaje: 'Profesionales obtenidos',
+        total,
+        profesionales
+    });
+}
+
 const validarAgenda = (agenda) => {
     if (!Array.isArray(agenda) || agenda.length === 0) {
         return false;
@@ -266,6 +286,7 @@ module.exports = {
     getProfesionales,
     usuarioGetID,
     getProfesionalById,
+    getProfesionalesPublic,
     usuarioPost,
     usuarioPut,
     deleteUsuario,
