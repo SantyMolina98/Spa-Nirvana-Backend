@@ -8,7 +8,7 @@ const ServicioSchema = Schema({
     descripcion:{type: String, required: [true, 'La descripción es obligatoria']},
     img:{type: String, required: [true, 'La imagen es obligatoria']},
     duracion:{type: String, required: [true, 'La duracion es obligatoria']}, 
-    destacado: {type: Boolean, default: false},
+    destacado: {type: Boolean, required: [true, 'El destacado es obligatorio']},
     fechaCreacion:{type: Date, default: Date.now},
     usuario:{type: Schema.Types.ObjectId, ref: 'Usuario', required: true},
     

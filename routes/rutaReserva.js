@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { getReservasAdmin, getReservasUsuario, postReserva, deleteReserva } = require('../controllers/controlReserva');
+const { getReservasAdmin, postReserva, deleteReserva } = require('../controllers/controlReserva');
 const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../middlewares/validar-jwt');
@@ -12,12 +12,6 @@ router.get('/admin', [
   esAdminRole,
   validarCampos
 ], getReservasAdmin);
-
-// GET para usuario: obtener sus propias reservas
-router.get('/', [
-  validarJWT,
-  validarCampos
-], getReservasUsuario);
 
 // POST: crear una reserva
 router.post('/', [
