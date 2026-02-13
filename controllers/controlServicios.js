@@ -3,7 +3,7 @@ const Servicio = require('../models/servicio');
 const cloudinary = require('cloudinary').v2;
 
 const getServicios = async (req = request, res = response) => {
-    const {desde = 0, limite = 0} = req.query;
+    const {desde = 0, limite = 100} = req.query;
     const query = { disponible: true };
 
     const [total, servicios] = await Promise.all([
@@ -36,7 +36,7 @@ const getServicioID = async(req = request, res = response) => {
 
 
 const postServicio = async (req = request, res = response) => {
-  const { precio, categoria, descripcion, img, duracion, disponible, usuario } = req.body;
+  const { precio, categoria, descripcion, img, duracion, disponible, destacado, usuario } = req.body;
   const nombreObl = req.body.nombre.toUpperCase();
 
   const servicioDB = await Servicio.findOne({ nombre: nombreObl });
@@ -62,6 +62,7 @@ const postServicio = async (req = request, res = response) => {
     img: imgId,
     duracion,
     disponible,
+    destacado,
     usuario: req.usuario._id
   };
 
@@ -72,7 +73,7 @@ const postServicio = async (req = request, res = response) => {
 
   const putServicio = async (req = request, res = response) => {
     const { id } = req.params;
-    const { precio, categoria, descripcion, img, duracion, disponible } = req.body;
+    const { precio, categoria, descripcion, img, duracion, disponible, destacado } = req.body;
     
     const usuarioId = req.usuario._id;
 
@@ -98,7 +99,7 @@ const postServicio = async (req = request, res = response) => {
       imgId = await imagen(img);
     }
 
-    let data = { precio, categoria, descripcion, duracion, disponible, usuario: usuarioId,img: imgId };
+    let data = { precio, categoria, descripcion, duracion, disponible, destacado, usuario: usuarioId,img: imgId };
     
 
     if (req.body.nombre) {

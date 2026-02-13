@@ -29,40 +29,13 @@ const getReservasAdmin = async (req = request, res = response) => {
   }
 };
 
-// GET para usuario: obtener sus propias reservas
-const getReservasUsuario = async (req = request, res = response) => {
-  try {
-    const usuario = req.usuario;
-    const uid = usuario ? usuario._id : undefined;
-
-    if (!uid) {
-      return res.status(401).json({
-        ok: false,
-        msg: 'Token inválido o usuario no autenticado'
-      });
-    }
-
-    const reservas = await Reserva.find({ usuario: uid })
-      .populate('servicio', 'nombre descripcion'); // Ajusta campos
-    res.json({
-      ok: true,
-      reservas
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      ok: false,
-      msg: 'Error al obtener reservas del usuario'
-    });
-  }
-};
 
 //Realiar una reserva como usuario
 const postReserva = async (req = request, res = response) => {  
   // Obtener usuario autenticado desde el middleware
   const usuario = req.usuario;
   const uid = usuario ? usuario._id : undefined;
-  const { servicio, fechaReserva, horaReserva } = req.body;
+  const { servicio, fechaReserva, horaReserva, profesional } = req.body;
 
   // Determinar rol
   const rol = (req.body.rol) ? req.body.rol : (usuario ? usuario.rol : undefined);
@@ -100,7 +73,9 @@ const postReserva = async (req = request, res = response) => {
     }
     fecha.setHours(0, 0, 0, 0);
 
-    const profesionalId = servicioDB.usuario;
+    // Usar el profesional enviado desde el frontend o buscar en servicioDB.usuario como fallback
+    const profesionalId = profesional || servicioDB.usuario;
+    
     const reservaExistente = await Reserva.findOne({
       profesional: profesionalId,
       servicio,
@@ -189,7 +164,6 @@ const deleteReserva = async (req = request, res = response) => {
 
 module.exports ={
   getReservasAdmin,
-  getReservasUsuario,
   postReserva,
   deleteReserva
 }
