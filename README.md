@@ -31,13 +31,13 @@ El flujo típico para un tester:
 - **Autenticación**: JWT
 - **Usuario Admin**: El siguiente es un ejemplo de usuario admin el cuál le permitirá realizar acciones como obtener, agregar, modificar y/o eliminar ya sea usuarios (comunes o administradores), servicios o categorías. Aclarando también que la eliminación no es física.
 
-    - Email : vale@gmail.com
-    - Contraseña : nazarena
+    - Email : gonzalo@gmail.com
+    - Contraseña : 123456
 
 - **Usuario Común**: El siguiente es un ejemplo de usuario común, el cuál ya está registrado en la base de datos, con el mismo, únicamente podrá modificar sus datos personales, no podrá realizar otras acciones.
 
-    - Email : usuario123@gmail.com
-    - Contraseña : usuario123
+    - Email : naza@gmail.com
+    - Contraseña : 123456
 
 
 ## Instalación y Configuración
