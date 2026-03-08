@@ -36,7 +36,7 @@ El flujo típico para un tester:
 
 - **Usuario Común**: El siguiente es un ejemplo de usuario común, el cuál ya está registrado en la base de datos, con el mismo, únicamente podrá modificar sus datos personales, no podrá realizar otras acciones.
 
-    - Email : naza@gmail.com
+    - Email : usuario2026@gmail.com
     - Contraseña : 123456
 
 
