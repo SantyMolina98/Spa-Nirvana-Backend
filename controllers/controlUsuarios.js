@@ -242,11 +242,11 @@ const olvidePassword = async (req = request, res = response) => {
         }
         
         const payload = { uid: usuario.id };
-        const token = jwt.sign(payload, process.env.SECRET_KEY || 'mi_palabra_secreta', { expiresIn: '1h' });
-        const frontUrl = process.env.FRONTEND_URL || 'https://spa-nirvana.netlify.app/';
+        const token = jwt.sign(payload, process.env.SECRET_KEY || 'mi_palabra_secreta', { expiresIn: '1h' });   
+        const frontUrl = req.headers.origin || 'http://localhost:5173';
         const link = `${frontUrl}/RecuperarCuenta/${token}`;
         
-        console.log(link); 
+        console.log("Link generado para:", frontUrl); 
         
         res.json({
             mensaje: 'Se ha enviado un enlace a tu correo',
