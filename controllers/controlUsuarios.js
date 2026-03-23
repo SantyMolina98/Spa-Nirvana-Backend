@@ -240,10 +240,14 @@ const olvidePassword = async (req = request, res = response) => {
         if (!usuario) {
             return res.status(400).json({ mensaje: 'El usuario no existe' });
         }
+        
         const payload = { uid: usuario.id };
         const token = jwt.sign(payload, process.env.SECRET_KEY || 'mi_palabra_secreta', { expiresIn: '1h' });
-        const link = [`http://localhost:5173/RecuperarCuenta/${token}`, `http://spa-nirvana.netlify.app/RecuperarCuenta/${token}`];
+        const frontUrl = process.env.FRONTEND_URL || 'https://spa-nirvana.netlify.app/';
+        const link = `${frontUrl}/RecuperarCuenta/${token}`;
+        
         console.log(link); 
+        
         res.json({
             mensaje: 'Se ha enviado un enlace a tu correo',
             link: link
