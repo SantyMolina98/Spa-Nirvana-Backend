@@ -7,9 +7,7 @@ const { check } = require('express-validator');
 const { esAdminRole } = require('../middlewares/validar-roles');
 const router = Router();
 
-router.get('/', [
-  validarJWT
-], getCategorias);
+router.get('/', getCategorias);
 
 router.get('/:id', [
   validarJWT,
